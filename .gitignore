@@ -109,4 +109,4 @@ tmp/
 _data
 .DS_Store
 hosts_*
-
+*.retry
