@@ -5,7 +5,7 @@
 
 def split_hostname(hostname):
     """ hostname split with '-'
-    bje-qtt-op-manager-test  --> managertest
+    bje-xxy-op-dev-test  --> devtest
     """
     return "".join(hostname.split("-")[-2:])
 
