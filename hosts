@@ -1,0 +1,5 @@
+[k8s-worker]
+47.75.12.19 ansible_connection=ssh        ansible_ssh_user=root #ansible_become_user=root ansible_become=true
+47.75.59.86 ansible_connection=ssh        ansible_ssh_user=root #ansible_become_user=root ansible_become=true
+
+
