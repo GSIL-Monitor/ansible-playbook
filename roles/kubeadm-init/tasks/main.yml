@@ -1,0 +1,135 @@
+---
+# tasks file for kube-init
+- name: stop useless system service
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enable: false
+  with_items:
+    - "firewalld"
+    - "postfix"
+    - "cups"
+  ignore_errors: True
+
+- name: disable selinux
+  lineinfile:
+    path: "{{ SYS_SELINUX_CONF }}"
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+
+- name: copy docker-ce/kube-aliyun repo
+  template:
+    src: "{{ item }}"
+    dest: "{{ YUM_REPO_HOME }}"
+  with_items:
+    - "{{ TMP_FILE_DOCKER_CE_REPO }}"
+    - "{{ TMP_FILE_KUBE_ALIYUN_REPO }}"
+
+- name: install docker, kubeadm
+  yum: 
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - docker-ce
+    - kubernetes-cni
+    - kubelet
+    - kubectl
+    - kubeadm
+    - ipvsadm
+
+- name: enable docker/kubelet service
+  service: 
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - docker
+    - kubelet
+
+- name: start docker service
+  service:
+    name: docker
+    state: started
+
+- name: docker pull/retag/rmi images - cover the GFW
+  shell:
+    docker pull {{ KUBE_REPO_LOCAL }}/{{ item }} && \
+    docker tag {{ KUBE_REPO_LOCAL }}/{{ item }} {{ KUBE_REPO_DEFAULT }}/{{ item }} && \
+    docker rmi {{ KUBE_REPO_LOCAL }}/{{ item }}
+  with_items:
+    - metrics-server-amd64:v0.3.1
+    - coredns:1.2.2
+    - etcd:3.2.24
+    - pause:3.1
+    - kube-proxy:v1.12.2
+    - kube-scheduler:v1.12.2
+    - kube-controller-manager:v1.12.2
+    - kube-apiserver:v1.12.2
+    - kubernetes-dashboard-amd64:v1.10.0
+  when: kube_role=='master'
+
+- name: docker pull img not need cover GFW
+  shell:
+    docker pull {{ item }}
+  with_items:
+    - quay.io/coreos/flannel:v0.10.0-amd64
+    - quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.20.0
+
+- name: docker pull/retag/rmi images - cover the GFW
+  shell:
+    docker pull {{ KUBE_REPO_LOCAL }}/{{ item }} && docker tag {{ KUBE_REPO_LOCAL }}/{{ item }} {{ KUBE_REPO_DEFAULT }}/{{ item }} && docker rmi {{ KUBE_REPO_LOCAL }}/{{ item }}
+  with_items:
+    - metrics-server-amd64:v0.3.1
+    - pause:3.1
+    - kube-proxy:v1.12.2
+  when: kube_role=='node'
+
+- name: config kubelet config, turn off swap
+  template:
+    src: "{{ TMP_KUBELET_CONFIG }}"
+    dest: "{{ KUBELET_CONFIG }}"
+
+# - name: config kernel args
+#   shell:
+#     echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+- name: config kernel args, proc && auto
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+    sysctl_file: "{{ SYSCTL_FILE }}"
+    state: present
+    reload: yes
+  with_items:
+    - {key: "net.ipv4.ip_forward", value: "1"}
+    - {key: "net.bridge.bridge-nf-call-iptables", value: "1"}
+    - {key: "net.bridge.bridge-nf-call-ip6tables", value: "1"}
+
+- name: ip_vs mod load
+  shell:
+    modprobe -- {{ item }}
+  with_items: "{{ KERNEL_MOD_IP_VS }}"
+
+- name: ip_vs mod auto load 
+  template:
+    src: "{{ TMP_KERNEL_MOD_IP_VS }}"
+    dest: "{{ KERNEL_MOD_DIR }}{{ KERNEL_MOD_IP_VS_NAME }}"
+
+- name: open kube-proxy use ipvs instead of iptables
+  lineinfile:
+    path: "{{ SYS_USER_PROFILE }}"
+    regexp: '^export KUBE_PROXY_MODE'
+    line: 'export KUBE_PROXY_MODE=ipvs' 
+
+
+
+
+
+
+
+
+
+
+
+
+

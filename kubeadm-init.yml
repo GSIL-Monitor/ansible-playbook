@@ -1,0 +1,5 @@
+- hosts: vm
+  order: sorted
+  gather_facts: True
+  roles:
+    - kubeadm-init 

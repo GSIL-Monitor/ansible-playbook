@@ -1,0 +1,4 @@
+#!/bin/bash
+{% for ipvs_mod in KERNEL_MOD_IP_VS %}
+modprobe -- {{ ipvs_mod }}
+{% endfor %}

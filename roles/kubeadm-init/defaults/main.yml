@@ -1,0 +1,26 @@
+---
+# defaults file for kube-init
+SYSCTL_FILE: "/etc/sysctl.conf"
+
+SYS_SELINUX_CONF: "/etc/selinux/config"
+SYS_USER_PROFILE: "/etc/profile"
+
+TMP_KUBELET_CONFIG: "etc_sysconfig_kubelet.yml"
+KUBELET_CONFIG: "/etc/sysconfig/kubelet"
+
+YUM_REPO_HOME: "/etc/yum.repos.d"
+TMP_FILE_KUBE_ALIYUN_REPO: "kube-aliyun.repo"
+TMP_FILE_DOCKER_CE_REPO: "docker-ce.repo"
+
+KUBE_REPO_LOCAL: "nightkid"
+KUBE_REPO_DEFAULT: "k8s.gcr.io"
+
+KERNEL_MOD_DIR: "/etc/sysconfig/modules/"
+KERNEL_MOD_IP_VS_NAME: "ipvs.modules"
+KERNEL_MOD_IP_VS:
+- ip_vs
+- ip_vs_rr
+- ip_vs_wrr
+- ip_vs_sh
+- nf_conntrack_ipv4
+TMP_KERNEL_MOD_IP_VS: "etc_sysconfig_modules_ipvs.modules.yml"
