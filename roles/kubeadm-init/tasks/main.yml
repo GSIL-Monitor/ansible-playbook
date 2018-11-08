@@ -51,10 +51,11 @@
     state: started
 
 - name: docker pull/retag/rmi images - cover the GFW
-  shell:
-    docker pull {{ KUBE_REPO_LOCAL }}/{{ item }} && \
+  shell: |
+    docker images {{ KUBE_REPO_DEFAULT }}/{{ item }} || \
+    (docker pull {{ KUBE_REPO_LOCAL }}/{{ item }} && \
     docker tag {{ KUBE_REPO_LOCAL }}/{{ item }} {{ KUBE_REPO_DEFAULT }}/{{ item }} && \
-    docker rmi {{ KUBE_REPO_LOCAL }}/{{ item }}
+    docker rmi {{ KUBE_REPO_LOCAL }}/{{ item }})
   with_items:
     - metrics-server-amd64:v0.3.1
     - coredns:1.2.2
@@ -69,10 +70,27 @@
 
 - name: docker pull img not need cover GFW
   shell:
-    docker pull {{ item }}
+    docker images {{ item }} || docker pull {{ item }}
   with_items:
     - quay.io/coreos/flannel:v0.10.0-amd64
-    - quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.20.0
+    - directxman12/k8s-prometheus-adapter-amd64:latest
+    - giantswarm/tiny-tools:latest
+    - google/cadvisor:latest
+    - prom/prometheus:v1.7.0
+    - grafana/grafana:4.2.0
+    - prom/node-exporter:v0.14.0
+    - dockermuenster/caddy:0.9.3
+
+- name: docker pull nginx-ingress-controller|kube-state-metrics - origin repo is too slow
+  shell: |
+    docker images {{ item.ori_img }} || \
+    (docker pull {{ item.my_img }} && \
+    docker tag {{ item.my_img }} {{ item.ori_img }} && \
+    docker rmi {{ item.ori_img }})
+  with_items:
+    - {my_img: "nightkid/nginx-ingress-controller:0.20.0", ori_img: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.20.0"}
+    - {my_img: "nightkid/kube-state-metrics:v0.5.0", ori_img: "gcr.io/google_containers/kube-state-metrics:v0.5.0"}
+    - {my_img: "nightkid/alertmanager:v0.7.1", ori_img: "quay.io/prometheus/alertmanager:v0.7.1"}
 
 - name: docker pull/retag/rmi images - cover the GFW
   shell:
@@ -118,7 +136,7 @@
 - name: open kube-proxy use ipvs instead of iptables
   lineinfile:
     path: "{{ SYS_USER_PROFILE }}"
-    regexp: '^export KUBE_PROXY_MODE'
+    regexp: '^export KUBE_PROXY_MODE='
     line: 'export KUBE_PROXY_MODE=ipvs' 
 
 
