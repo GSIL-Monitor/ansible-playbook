@@ -3,8 +3,8 @@
 
 - name: uninstall old version
   yum: 
-    name={{ item }}
-    state=absent
+    name: {{ item }}
+    state: absent
   with_items:
     - docker
     - docker-client
@@ -19,8 +19,8 @@
 
 - name: install dep
   yum:
-    name={{ item }}
-    state=present
+    name: {{ item }}
+    state: present
   with_items:
     - yum-utils
     - device-mapper-persistent-data
@@ -28,21 +28,30 @@
 
 - name: add docker repo
   copy:
-    src="docker-ce.repo"
-    dest="/etc/yum.repos.d/docker-ce.repo"
+    src: "docker-ce.repo"
+    dest: "/etc/yum.repos.d/docker-ce.repo"
 
 - name: install docker-ce
   yum: 
-    name=docker-ce
-    state=present
+    name: docker-ce
+    state: present
 
 - name: start docker service
   service:
-    name=docker
-    state=started
+    name: docker
+    state: started
+    enable: true
 
 
+- name: install docker-compose
+  shell: |
+    curl -L "https://github.com/docker/compose/releases/download/{{ DOCKER_COMPOSE_VERSION }}/docker-compose-$(uname -s)-$(uname -m)" -o {{ DIR_USER_LOCAL_BIN }}/docker-compose && \
+    chmod +x {{ DIR_USER_LOCAL_BIN }}/docker-compose
 
+- name: install docker-machine
+  shell: |
+    curl https://github.com/docker/machine/releases/download/{{DOCKER_MACHINE_VERSION}}/docker-machine-$(uname -s)-$(uname -m) > {{ DIR_USER_LOCAL_BIN }}/docker-machine && \
+    chmod +x {{ DIR_USER_LOCAL_BIN }}/docker-machine
 
 
 

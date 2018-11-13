@@ -1,2 +1,7 @@
 ---
 # defaults file for docker
+DIR_USER_LOCAL_BIN: "/usr/local/bin"
+
+DOCKER_COMPOSE_VERSION: "1.23.1"
+DOCKER_MACHINE_VERSION: "v0.14.0"
+

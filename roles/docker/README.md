@@ -1,31 +1,20 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+安装程序:
+	docker-ce: latest
+	docker-compose: 1.23.1
+	docker-machine: v0.14.0
 
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
-
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+修改 docker-compose, docker-machine 版本, 方法有二:
+1. 传入 `DOCKER_COMPOSE_VERSION`, `DOCKER_MACHINE_VERSION` 变量值.
+2. 修改 `default/main.yml` 中 `DOCKER_COMPOSE_VERSION`, `DOCKER_MACHINE_VERSION` 的值.
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+$ ansible-playbook -i hosts pb.yml
+```
 
 License
 -------

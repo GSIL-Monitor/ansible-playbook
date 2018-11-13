@@ -1,6 +1,7 @@
 [vm]
-192.168.233.128 ansible_ssh_host=localhost ansible_ssh_user="bob" ansible_ssh_pass="123.com" ansible_ssh_port=22 ansible_sudo_pass="123.com" kube_role=controller 
+192.168.2.128 ansible_ssh_host=localhost ansible_ssh_user="bob" ansible_ssh_pass="123.com" ansible_ssh_port=22 ansible_sudo_pass="123.com" kube_role=controller 
 
 [kube]
-bigdatafat031090 ansible_ssh_host=10.114.31.90 ansible_ssh_user="biye" ansible_ssh_pass="FSFS123##!@" ansible_ssh_port=23245 kube_role=master
-bigdatafat031155 ansible_ssh_host=10.114.31.155 ansible_ssh_user="biye" ansible_ssh_pass="FSFS123##!@" ansible_ssh_port=23245 kube_role=node01
+192.168.1.11 ansible_ssh_host=192.168.1.11 ansible_ssh_user="root" ansible_ssh_pass="123456" ansible_ssh_port=22 kube_role=master
+192.168.1.111 ansible_ssh_host=192.168.1.111 ansible_ssh_user="root" ansible_ssh_pass="123456" ansible_ssh_port=22 kube_role=node01
+
