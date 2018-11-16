@@ -25,7 +25,7 @@ KERNEL_MOD_IP_VS:
 - nf_conntrack_ipv4
 TMP_KERNEL_MOD_IP_VS: "etc_sysconfig_modules_ipvs.modules.yml"
 
-URL_KUBEBOX_DOWNLOAD: 
+BIN_KUBEBOX_DOWNLOAD: 
   url: "https://github.com/astefanutti/kubebox/releases/download/v0.3.2/kubebox-linux"
   dest: "/usr/local/bin/kubebox"
   mode: 0755
