@@ -17,15 +17,6 @@
     - docker-engine-selinux
     - docker-engine
 
-- name: install dep
-  yum:
-    name: {{ item }}
-    state: present
-  with_items:
-    - yum-utils
-    - device-mapper-persistent-data
-    - lvm2
-
 - name: add docker repo
   copy:
     src: "docker-ce.repo"
@@ -33,8 +24,13 @@
 
 - name: install docker-ce
   yum: 
-    name: docker-ce
+    name: {{ item }}
     state: present
+  with_items:
+    - yum-utils
+    # - device-mapper-persistent-data
+    # - lvm2
+    - docker-ce
 
 - name: start docker service
   service:
@@ -42,17 +38,17 @@
     state: started
     enable: true
 
-
 - name: install docker-compose
-  shell: |
-    curl -L "https://github.com/docker/compose/releases/download/{{ DOCKER_COMPOSE_VERSION }}/docker-compose-$(uname -s)-$(uname -m)" -o {{ DIR_USER_LOCAL_BIN }}/docker-compose && \
-    chmod +x {{ DIR_USER_LOCAL_BIN }}/docker-compose
+  get_url:       
+    url: {{ BIN_DOCKER_COMPOSE.url }}
+    dest: {{ BIN_DOCKER_COMPOSE.dest }}
+    mode: {{ BIN_DOCKER_COMPOSE.mode }}
 
 - name: install docker-machine
-  shell: |
-    curl https://github.com/docker/machine/releases/download/{{DOCKER_MACHINE_VERSION}}/docker-machine-$(uname -s)-$(uname -m) > {{ DIR_USER_LOCAL_BIN }}/docker-machine && \
-    chmod +x {{ DIR_USER_LOCAL_BIN }}/docker-machine
-
+  get_url: 
+    url: {{ BIN_DOCKER_MACHINE.url }}
+    dest: {{ BIN_DOCKER_MACHINE.dest }}
+    mode: {{ BIN_DOCKER_MACHINE.mode }}
 
 
 

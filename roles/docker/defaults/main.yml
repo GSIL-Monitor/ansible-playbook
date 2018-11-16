@@ -2,6 +2,13 @@
 # defaults file for docker
 DIR_USER_LOCAL_BIN: "/usr/local/bin"
 
-DOCKER_COMPOSE_VERSION: "1.23.1"
-DOCKER_MACHINE_VERSION: "v0.14.0"
+BIN_DOCKER_COMPOSE: 
+  url: "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)"
+  dest: "{{ DIR_USER_LOCAL_BIN }}/docker-compose"
+  mode: 0755
+
+BIN_DOCKER_MACHINE: 
+  url: "https://github.com/docker/machine/releases/download/v0.14.0/docker-machine-$(uname -s)-$(uname -m)"
+  dest: "{{ DIR_USER_LOCAL_BIN }}/docker-machine"
+  mode: 0755
 

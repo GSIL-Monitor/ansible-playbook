@@ -140,7 +140,11 @@
     line: 'export KUBE_PROXY_MODE=ipvs' 
 
 
-
+- name: install kubebox 
+  get_url:
+    url: {{ URL_KUBEBOX_DOWNLOAD.url }}
+    dest: {{ URL_KUBEBOX_DOWNLOAD.dest }}
+    mode: {{ URL_KUBEBOX_DOWNLOAD.mode }}
 
 
 
