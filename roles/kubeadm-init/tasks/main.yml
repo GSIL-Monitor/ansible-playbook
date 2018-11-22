@@ -142,7 +142,7 @@
 
 - name: install kubebox 
   get_url:
-    url: {{ BIN_KUBEBOX_DOWNLOAD.url }}
-    dest: {{ BIN_KUBEBOX_DOWNLOAD.dest }}
-    mode: {{ BIN_KUBEBOX_DOWNLOAD.mode }}
+    url: "{{ BIN_KUBEBOX_DOWNLOAD.url }}"
+    dest: "{{ BIN_KUBEBOX_DOWNLOAD.dest }}"
+    mode: "{{ BIN_KUBEBOX_DOWNLOAD.mode }}"
 
