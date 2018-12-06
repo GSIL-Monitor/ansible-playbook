@@ -1,0 +1,21 @@
+---
+# defaults file for nodejs
+
+REPO_GIT_NVM: "https://github.com/creationix/nvm.git"
+REPO_NPM_TAOBAO: "https://registry.npm.taobao.org"
+
+TEMP_DIR_NVM: "/tmp/nvm"
+
+FILE_ALL_USER_PROFILE: "/etc/profile"
+FILE_ALL_USER_BASHRC: "/etc/bashrc"
+
+HOME_NODEJS: "/usr/local/src/nodejs"
+HOME_HEXO: "/usr/local/src/hexo/pyfdtic"
+
+NODEJS_PKG_NAME: "node-v10.14.1-linux-x64.tar.xz"
+URL_NODEJS_PKG: "https://nodejs.org/dist/v10.14.1/{{ NODEJS_PKG_NAME }}"
+
+HEXO_DEPLOY:
+  type: "git"
+  repo: "https://github.com/pyfdtic/pyfdtic.github.io.git"
+  branch: "master"

@@ -1,0 +1,31 @@
+---
+# tasks file for nodejs
+- name: download nodejs binary package
+  get_url: 
+    url: "{{ URL_NODEJS_PKG }}"
+    dest: "/tmp"
+
+
+- name: make HOME_NODEJS is exist
+  file:
+    path: "{{ HOME_NODEJS }}" 
+    state: directory
+
+- name: unarchive nodejs package to /usr/local/src
+  unarchive:
+    src: "/tmp/{{ NODEJS_PKG_NAME }}"
+    dest: "{{ HOME_NODEJS }}"
+    remote_src: yes
+
+- name: make npm alias
+  shell: |
+    alias npm="npm --registry={{ REPO_NPM_TAOBAO }} \
+    --cache=$HOME/.npm/.cache/cnpm \
+    --disturl=https://npm.taobao.org/dist \
+    --userconfig=$HOME/.cnpmrc"
+
+- name: add npm to /etc/bashrc
+  lineinfile:
+    path: "{{ FILE_ALL_USER_BASHRC }}"
+    line: "alias npm='npm --registry={{ REPO_NPM_TAOBAO }} --cache=$HOME/.npm/.cache/cnpm --disturl=https://npm.taobao.org/dist --userconfig=$HOME/.cnpmrc'"
+
