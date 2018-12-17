@@ -25,6 +25,10 @@
     - "{{ TMP_FILE_DOCKER_CE_REPO }}"
     - "{{ TMP_FILE_KUBE_ALIYUN_REPO }}"
 
+- name: close swap
+  shell: |
+    swapoff -a
+
 - name: install docker, kubeadm
   yum: 
     name: "{{ item }}"
@@ -119,6 +123,7 @@
     state: present
     reload: yes
   with_items:
+    - {key: "vm.swappiness", value: "0"}
     - {key: "net.ipv4.ip_forward", value: "1"}
     - {key: "net.bridge.bridge-nf-call-iptables", value: "1"}
     - {key: "net.bridge.bridge-nf-call-ip6tables", value: "1"}
