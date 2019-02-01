@@ -1,0 +1,32 @@
+---
+# yum install base
+- import_tasks: yum-utils.yml
+  tags:
+    - base
+    - yum
+
+# stop unused service
+- import_tasks: service.yml
+  tags:
+    - system_service
+
+# hostname
+- import_tasks: hostname.yml
+  when: ansible_hostname == DEFAULT_HOSTNAME
+  tags:
+    - base
+    - hostname
+
+# selinux
+- import_tasks: selinux.yml
+  tags:
+    - base
+    - selinux
+
+# crontab for time
+- import_tasks: time.yml
+  tags:
+    - base
+    - hosts
+
+

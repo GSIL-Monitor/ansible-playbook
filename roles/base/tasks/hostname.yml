@@ -1,0 +1,4 @@
+---
+- name: sethostname
+  hostname: 
+    name: "{{ ansible_default_ipv4.address | ip_to_hostname }}"

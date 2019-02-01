@@ -1,0 +1,14 @@
+---
+# defaults file for etcd
+ETCD_DOWNLOAD_URL: "https://github.com/etcd-io/etcd/releases/download/v{{ ETCD_VERSION }}/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz"
+ETCD_USER: "etcd"
+ETCD_USER_GRP: "{{ ETCD_USER }}"
+
+ETCD_WORK_HOME: "/var/lib/etcd"
+
+ETCD_CONFIG_HOME: "/etc/etcd"
+ETCD_CONFIG: "{{ ETCD_CONFIG_HOME }}/etcd.conf"
+
+ETCD_CA_CN: "kube-ppd.com"
+
+FILE_SCRIPT_ETCD_SNAPSHOW_BACKUP: "etcd_snapshot_backup.sh.j2"

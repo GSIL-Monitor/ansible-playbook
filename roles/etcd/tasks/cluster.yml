@@ -1,0 +1,38 @@
+---
+- name: add etcd group
+  group:
+    name: "{{ ETCD_USER_GRP }}"
+  when: ETCD_USER != ETCD_USER_GRP
+
+- name: add etcd user
+  user:
+    name: "{{ ETCD_USER }}"
+    group: "{{ ETCD_USER_GRP }}"
+  when: ETCD_USER != ETCD_USER_GRP
+
+- name: add etcd user
+  user:
+    name: "{{ ETCD_USER }}"
+  when: ETCD_USER == ETCD_USER_GRP
+
+- name: add etcd work home
+  file:
+    path: "{{ ETCD_WORK_HOME }}"
+    state: directory
+    owner: "{{ ETCD_USER }}"
+    group: "{{ ETCD_USER_GRP }}"
+
+- name: make sure /etc/etcd is exist
+  file:
+    path: "{{ ETCD_CONFIG_HOME }}"
+    state: directory
+
+- name: add etcd config
+  template: 
+    src: etcd.conf.j2
+    dest: "{{ ETCD_CONFIG }}"
+
+- name: add etcd systemd config
+  template:
+    src: etcd.service.j2
+    dest: "{{ SYSTEMD_APP_CONFIG_HOME }}/etcd.service"

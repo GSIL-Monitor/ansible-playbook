@@ -1,0 +1,15 @@
+---
+- name: stop useless system service
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+    - "firewalld"
+    - "postfix"
+    - "cups"
+  ignore_errors: True
+
+- name: fix stop firewalld
+  shell: |
+    systemctl stop firewalld; systemctl disable firewalld

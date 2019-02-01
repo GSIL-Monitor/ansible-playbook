@@ -1,0 +1,33 @@
+- name: copy kube-aliyun repo
+  template:
+    src: "{{ item }}"
+    dest: "{{ ETC_YUM_dot_REPOS_dot_D }}"
+  with_items:
+    - "{{ TMP_FILE_KUBE_ALIYUN_REPO }}"
+  tags:
+    - master
+    - node
+
+- name: install kubeadm
+  yum: 
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - kubelet-{{ KUBERNETS_VERSION }}-0.x86_64
+    - kubectl-{{ KUBERNETS_VERSION }}-0.x86_64
+    - kubeadm-{{ KUBERNETS_VERSION }}-0.x86_64
+    - ipvsadm
+    - kubernetes-cni
+  tags:
+    - master
+    - node
+
+- name: enable kubelet service
+  service: 
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - kubelet
+  tags:
+    - master
+    - node

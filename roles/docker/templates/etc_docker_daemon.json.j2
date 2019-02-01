@@ -1,0 +1,21 @@
+{
+  "registry-mirrors": ["{{ REGISTRY_MIRRORS }}"],  
+  "max-concurrent-downloads": 3,
+  "max-concurrent-uploads": 5,
+  "storage-driver": "overlay2",
+  "storage-opts": [
+       "overlay2.override_kernel_check=true"
+    ],
+  "insecure-registries": ["10.2.8.214:18082", "dock.cbd.com", "{{ PRIVATE_DOCKER_HARBOR }}"],
+  "mtu": 1500,
+  "hosts": [
+          "tcp://0.0.0.0:2375",
+          "unix:///var/run/docker.sock"
+  ],
+  "log-level": "error",
+  "log-driver": "json-file",
+  "log-opts": {
+      "max-size": "100m",
+      "max-file": "3"
+  }
+}

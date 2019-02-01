@@ -1,0 +1,20 @@
+---
+# time
+- name: sync time
+  shell: ntpdate {{ DEFAULT_TIME_SERVER }}
+
+- name: get ntpdate path
+  shell: which ntpdate
+  register: path_to_ntpdate
+
+- name: crontab for ntpdate
+  cron: 
+    name: "sync time"
+    minute: "0"
+    hour: "0"
+    job: "{{ path_to_ntpdate.stdout }} {{ DEFAULT_TIME_SERVER }}"
+
+# timezone: $ timedatectl set-timezone Asia/Shanghai
+- name: set timezone to {{ DEFAULT_TIME_ZONE }}
+  timezone:
+    name: "{{ DEFAULT_TIME_ZONE }}"

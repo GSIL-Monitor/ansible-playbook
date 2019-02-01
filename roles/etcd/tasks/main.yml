@@ -1,0 +1,22 @@
+---
+# tasks file for etcd
+- import_tasks: download.yml
+  tags:
+    - download
+
+# - import_tasks: gen_certs_for_k8s.yml
+#   tags:
+#     - cluster
+#     - master
+
+- import_tasks: hosts.yml
+  tags:
+    - hosts
+
+- import_tasks: cluster.yml
+  tags:
+    - cluster
+
+- import_tasks: backup-snapshot.yml
+  tags:
+    - backup

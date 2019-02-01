@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+
+BACKUP_DIR="{{ SYSTEM_DATA_HOME }}/etcd"
+DATE_TIME=`date "+%Y%m%d-%H%M%S"`
+
+/opt/etcd/etcdctl \
+--endpoints={% for host in play_hosts %}{{ hostvars[host].ansible_hostname}}.{{ ETCD_CA_CN }}=https://{{ hostvars[host].ansible_hostname}}.{{ ETCD_CA_CN }}:2379{% if not loop.last %},{% endif %}{% endfor %} \
+snapshot save $BACKUP_DIR/$DATE_TIME.snapshot

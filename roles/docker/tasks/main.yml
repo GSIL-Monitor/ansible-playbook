@@ -1,9 +1,8 @@
 ---
 # tasks file for docker
-
 - name: uninstall old version
   yum: 
-    name: {{ item }}
+    name: "{{ item }}"
     state: absent
   with_items:
     - docker
@@ -20,35 +19,69 @@
 - name: add docker repo
   copy:
     src: "docker-ce.repo"
-    dest: "/etc/yum.repos.d/docker-ce.repo"
+    dest: "{{ ETC_YUM_dot_REPOS_dot_D }}/docker-ce.repo"
 
-- name: install docker-ce
+- name: yum-makecache
+  command: yum makecache
+  args:
+    warn: no
+
+- name: install docker-ce latest
   yum: 
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
-    - yum-utils
-    # - device-mapper-persistent-data
-    # - lvm2
     - docker-ce
+  when: DOCKER_VERSION == "latest"
+
+- name: install docker-ce specfic version
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "docker-ce-{{ DOCKER_VERSION }}"
+  when: DOCKER_VERSION != "latest"
+
+- name: load overlay mod
+  shell: |
+    modprobe -- overlay && \
+    echo "modprobe -- overlay" > {{ ETC_SYSCONFIG_MODULES }}/overlay.sh && \
+    chmod +x {{ ETC_SYSCONFIG_MODULES }}/overlay.sh 
+  args:
+    warn: no
+
+- name: make sure /etc/docker/ is exist
+  file:
+    path: "/etc/docker/"
+    state: directory
+
+- name: add docker-daemon.json
+  template:
+    src: "etc_docker_daemon.json.j2"
+    dest: "/etc/docker/daemon.json"
+
+- name: reload docker service
+  service:
+    name: docker
+    state: reloaded
 
 - name: start docker service
   service:
     name: docker
     state: started
-    enable: true
+    enabled: yes
 
-- name: install docker-compose
-  get_url:       
-    url: {{ BIN_DOCKER_COMPOSE.url }}
-    dest: {{ BIN_DOCKER_COMPOSE.dest }}
-    mode: {{ BIN_DOCKER_COMPOSE.mode }}
+# - name: install docker-compose
+#   get_url:       
+#     url: "{{ BIN_DOCKER_COMPOSE.url }}"
+#     dest: "{{ BIN_DOCKER_COMPOSE.dest }}"
+#     mode: "{{ BIN_DOCKER_COMPOSE.mode }}"
 
-- name: install docker-machine
-  get_url: 
-    url: {{ BIN_DOCKER_MACHINE.url }}
-    dest: {{ BIN_DOCKER_MACHINE.dest }}
-    mode: {{ BIN_DOCKER_MACHINE.mode }}
+# - name: install docker-machine
+#   get_url: 
+#     url: "{{ BIN_DOCKER_MACHINE.url }}"
+#     dest: "{{ BIN_DOCKER_MACHINE.dest }}"
+#     mode: "{{ BIN_DOCKER_MACHINE.mode }}"
 
 
 

@@ -1,0 +1,20 @@
+---
+# - import_tasks: image.yml
+#   tags:
+#     - master
+#     - node
+
+- import_tasks: master.yml
+  when: kube_role == "master"
+  tags:
+    - master
+
+- import_tasks: tools.yml
+  when: kube_role == "master"
+  tags:
+    - master
+
+- import_tasks: node.yml
+  when: kube_role == "node"
+  tags:
+    - node

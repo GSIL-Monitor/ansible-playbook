@@ -1,0 +1,22 @@
+---
+- name: mkdir etcd backup dir
+  file:
+    path: "{{ SYSTEM_DATA_HOME }}/etcd"
+    state: directory
+    owner: "{{ ETCD_USER }}"
+    group: "{{ ETCD_USER_GRP }}"
+
+- name: cp snapshot script
+  template:
+    src: "{{ FILE_SCRIPT_ETCD_SNAPSHOW_BACKUP }}"
+    dest: "{{ USR_LOCAL_BIN }}/{{ FILE_SCRIPT_ETCD_SNAPSHOW_BACKUP }}"
+    owner: "{{ ETCD_USER }}"
+    group: "{{ ETCD_USER_GRP }}"
+    mode: u+rwx,g+rwx,o-rwx  
+
+- name: install crontab job for backup everyday
+  cron: 
+    name: etcd snapshot backup everyday
+    hour: 0
+    minute: 0
+    job: "{{ USR_LOCAL_BIN }}/{{ FILE_SCRIPT_ETCD_SNAPSHOW_BACKUP }}"

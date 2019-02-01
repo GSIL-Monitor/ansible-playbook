@@ -1,0 +1,19 @@
+
+- name: kubectl auto completion
+  lineinfile:
+    path: "{{ ETC_PROFILE }}"
+    state: present
+    line: "source <(kubectl completion bash)"
+  when: kube_role=='master'
+  tags:
+    - master
+
+- name: install kubebox 
+  get_url:
+    url: "{{ BIN_KUBEBOX_DOWNLOAD.url }}"
+    dest: "{{ BIN_KUBEBOX_DOWNLOAD.dest }}"
+    mode: "{{ BIN_KUBEBOX_DOWNLOAD.mode }}"
+  when: kube_role=='master'
+  ignore_errors: True
+  tags:
+    - master

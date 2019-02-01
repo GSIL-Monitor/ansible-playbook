@@ -1,0 +1,14 @@
+- name: get selinux status
+  shell: getenforce
+  register: selinux_statu
+
+- name: disable selinux
+  lineinfile:
+    path: "{{ ETC_SELINUX_CONFIG }}"
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+  when: selinux_statu != ""
+
+- name: selinux setenforce
+  shell: setenforce 0
+  ignore_errors: true

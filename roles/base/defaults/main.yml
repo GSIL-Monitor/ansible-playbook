@@ -1,0 +1,4 @@
+---
+# defaults file for base
+DEFAULT_HOSTNAME: "localhost"
+

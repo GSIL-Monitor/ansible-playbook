@@ -1,0 +1,52 @@
+# ------------------------------ Time ------------------------------ #
+
+DEFAULT_TIME_SERVER: "asia.pool.ntp.org"
+DEFAULT_TIME_ZONE: "Asia/Shanghai"
+
+# ------------------------------ System ------------------------------ #
+CUSTOM_APP_HOME: "/opt"
+CUSTOM_APP_SRC: "/usr/local/src"
+
+USR_LOCAL_BIN: "/usr/loca/bin"
+
+ETC_HOSTS: "/etc/hosts"
+ETC_FSTAB: "/etc/fstab"
+ETC_SYSCTL_dot_CONF: "/etc/sysctl.conf"
+ETC_SELINUX_CONFIG: "/etc/selinux/config"
+ETC_PROFILE: "/etc/profile"
+ETC_SYSCONFIG_MODULES: "/etc/sysconfig/modules"
+ETC_YUM_dot_REPOS_dot_D: "/etc/yum.repos.d"
+
+SYSTEMD_APP_CONFIG_HOME: "/usr/lib/systemd/system"
+
+SYSTEM_DATA_HOME: "/opt/data"
+
+# ------------------------------ kubernetes ------------------------------ #
+REGISTRY_MIRRORS: "http://7be7910f.m.daocloud.io"
+PYPI_PUB_DOUBAN: "https://pypi.doubanio.com/simple"
+PRIVATE_DOCKER_HARBOR: "harbor.ppdaicorp.com"
+HARBOR_USER: "admin"
+HARBOR_PASSWORD: "Harbor12345"
+HARBOR_K8S_PREFIX: "k8s"
+
+HEAPSER_IMAGES:
+  - {"repo": "k8s.gcr.io", "name": "heapster-grafana-amd64", "version": "v5.0.4"}
+  - {"repo": "k8s.gcr.io", "name": "heapster-amd64", "version": "v1.5.4"}
+  - {"repo": "k8s.gcr.io", "name": "heapster-influxdb-amd64", "version": "v1.5.2"}
+
+ETCD_VERSION: "3.2.24"
+KUBERNETS_VERSION: "1.13.2"
+KUBERNETS_IMAGES_MASTER: 
+- {"repo": "k8s.gcr.io", "name": "kube-apiserver", "version": "v1.13.2"}
+- {"repo": "k8s.gcr.io", "name": "kube-controller-manager", "version": "v1.13.2"}
+- {"repo": "k8s.gcr.io", "name": "kube-scheduler", "version": "v1.13.2"}
+- {"repo": "k8s.gcr.io", "name": "kube-proxy", "version": "v1.13.2"}
+- {"repo": "k8s.gcr.io", "name": "pause", "version": "3.1"}
+- {"repo": "k8s.gcr.io", "name": "etcd", "version": "3.2.24"}
+- {"repo": "k8s.gcr.io", "name": "coredns", "version": "1.2.6"}
+- {"repo": "quay.io", "name": "coreos/flannel", "version": "v0.10.0-amd64"}
+
+KUBERNETS_IMAGES_NODE: 
+  - {"repo": "k8s.gcr.io", "name": "pause", "version": "3.1"}
+  - {"repo": "k8s.gcr.io", "name": "kube-proxy", "version": "v1.13.2"}
+  - {"repo": "quay.io", "name": "coreos/flannel", "version": "v0.10.0-amd64"}

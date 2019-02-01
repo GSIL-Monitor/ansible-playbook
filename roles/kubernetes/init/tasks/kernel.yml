@@ -1,0 +1,34 @@
+---
+- name: config kernel args, proc && auto
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+    sysctl_file: "{{ ETC_SYSCTL_dot_CONF }}"
+    state: present
+    reload: yes
+  with_items:
+    - {key: "vm.swappiness", value: "0"}
+    - {key: "net.ipv4.ip_forward", value: "1"}
+    - {key: "net.bridge.bridge-nf-call-iptables", value: "1"}
+    - {key: "net.bridge.bridge-nf-call-ip6tables", value: "1"}
+  tags:
+    - master
+    - node  
+
+- name: ip_vs mod load
+  shell:
+    modprobe -- {{ item }}
+  with_items: "{{ KERNEL_MOD_IP_VS }}"
+  tags:
+    - master
+    - node
+
+- name: ip_vs mod auto load 
+  template:
+    src: "{{ TMP_KERNEL_MOD_IP_VS }}"
+    dest: "{{ ETC_SYSCONFIG_MODULES }}{{ KERNEL_MOD_IP_VS_NAME }}"
+    mode: 0755
+  tags:
+    - master
+    - node

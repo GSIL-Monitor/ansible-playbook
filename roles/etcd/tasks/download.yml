@@ -1,0 +1,23 @@
+---
+- name: register etcd pkg name
+  debug: 
+    msg: "etcd-v3.2.24-linux-amd64.tar.gz"
+  register: ETCD_PKG_NAME
+
+- name: unarchive etcd tgz to opt_etcd
+  unarchive: 
+    src: "{{ ETCD_PKG_NAME.msg }}"
+    dest: "{{ CUSTOM_APP_HOME }}"
+
+- name: etcd softlink
+  file:
+    src: "{{ CUSTOM_APP_HOME }}/{{ ETCD_PKG_NAME.msg | filename_loc }}"
+    dest: "{{ CUSTOM_APP_HOME }}/{{ ETCD_PKG_NAME.msg | split_inx('-', 0)}}"
+    state: link
+
+- name: etcd cmd to PATH
+  lineinfile:
+    path: "~/.bashrc"
+    line: "export PATH=$PATH:{{ CUSTOM_APP_HOME }}/{{ ETCD_PKG_NAME.msg | split_inx('-', 0)}}"
+    regexp: "^export PATH=$PATH:{{ CUSTOM_APP_HOME }}/{{ ETCD_PKG_NAME.msg | split_inx('-', 0)}}"
+    state: present

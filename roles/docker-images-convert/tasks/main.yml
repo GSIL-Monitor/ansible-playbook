@@ -1,0 +1,43 @@
+---
+# tasks file for docker-images-convert
+- name: install docker-py
+  shell: "pip -V || yum install python2-pip -y; pip install docker-py"
+  args:
+    warn: False
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: pull images
+  docker_image:
+    name: "{{ item.repo }}/{{ item.name }}:{{ item.version }}"
+  with_items: "{{ KUBERNETS_IMAGES_MASTER + KUBERNETS_IMAGES_NODE }}"
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: Log into private registry and force re-authorization
+  docker_login:
+    registry: "{{ PRIVATE_DOCKER_HARBOR }}"
+    username: "{{ HARBOR_USER }}"
+    password: "{{ HARBOR_PASSWORD }}"
+    reauthorize: yes
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: tag && push image to local register
+  docker_image:
+    name: "{{ item.repo }}/{{ item.name }}:{{ item.version }}"
+    repository: "{{ PRIVATE_DOCKER_HARBOR }}/{{ HARBOR_K8S_PREFIX }}/{{ item.name }}"
+    tag: "{{ item.version }}"
+    push: yes
+  with_items: "{{ KUBERNETS_IMAGES_MASTER + KUBERNETS_IMAGES_NODE }}"
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: remove temp images tags
+  docker_image:
+    name: "{{ PRIVATE_DOCKER_HARBOR }}/{{ HARBOR_K8S_PREFIX }}/{{ item.name }}"
+    tag: "{{ item.version }}"
+    state: absent
+  with_items: "{{ KUBERNETS_IMAGES_MASTER + KUBERNETS_IMAGES_NODE }}"
+  run_once: true
+  delegate_to: 127.0.0.1

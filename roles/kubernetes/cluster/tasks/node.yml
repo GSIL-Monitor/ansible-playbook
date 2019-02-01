@@ -1,0 +1,14 @@
+- name: node join to cluster
+  shell: "{{ hostvars | get_kubeadm_join_cmd('kubeadm_join_cmd') }}"
+  register: kubeadm_join_result
+  ignore_errors: True
+  when: kube_role=='node'
+  with_items: "{{ play_hosts }}"
+  tags:
+    - node
+
+- name: debug kubeadm node join
+  debug:
+    msg: "kubeadm join failed in node, plz run this cmd manually:\n{{ hostvars | get_kubeadm_join_cmd('kubeadm_join_cmd') }}"
+  when: kube_role=='node' and kubeadm_join_result.failed is True
+  ignore_errors: True

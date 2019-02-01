@@ -1,0 +1,11 @@
+---
+# defaults file for kube-init
+
+BIN_KUBEBOX_DOWNLOAD: 
+  url: "https://github.com/astefanutti/kubebox/releases/download/v0.3.2/kubebox-linux"
+  dest: "/usr/local/bin/kubebox"
+  mode: 0755
+
+POD_NETWORK: "10.244.0.0/16"
+SERVICE_NETWORK: "192.168.251.0/24"
+

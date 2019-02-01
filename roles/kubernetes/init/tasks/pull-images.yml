@@ -1,0 +1,62 @@
+---
+- name: install docker-py
+  shell: "pip -V || yum install python2-pip -y; pip install docker-py"
+  args:
+    warn: False
+  tags:
+    - master
+    - node
+
+- name: Log into private registry and force re-authorization
+  docker_login:
+    registry: "{{ PRIVATE_DOCKER_HARBOR }}"
+    username: "{{ HARBOR_USER }}"
+    password: "{{ HARBOR_PASSWORD }}"
+    reauthorize: yes
+  tags:
+    - master
+    - node
+
+- name: pull images for master
+  docker_image:
+    name: "{{ PRIVATE_DOCKER_HARBOR }}/{{ HARBOR_K8S_PREFIX }}/{{ item.name }}"
+    tag: "{{ item.version }}"
+    repository: "{{ item.repo }}/{{ item.name }}:{{ item.version }}"
+  with_items: "{{ KUBERNETS_IMAGES_MASTER }}"
+  when: kube_role == "master"
+  tags:
+    - master
+    - node
+
+- name: remove temp images for master
+  docker_image:
+    name: "{{ PRIVATE_DOCKER_HARBOR }}/{{ HARBOR_K8S_PREFIX }}/{{ item.name }}"
+    tag: "{{ item.version }}"
+    state: absent
+  with_items: "{{ KUBERNETS_IMAGES_MASTER }}"
+  when: kube_role == "master"
+  tags:
+    - master
+    - node
+
+- name: pull images for node
+  docker_image:
+    name: "{{ PRIVATE_DOCKER_HARBOR }}/{{ HARBOR_K8S_PREFIX }}/{{ item.name }}"
+    tag: "{{ item.version }}"
+    repository: "{{ item.repo }}/{{ item.name }}:{{ item.version }}"
+  with_items: "{{ KUBERNETS_IMAGES_NODE }}"
+  when: kube_role == "node"
+  tags:
+    - master
+    - node
+
+- name: remove temp images for node
+  docker_image:
+    name: "{{ PRIVATE_DOCKER_HARBOR }}/{{ HARBOR_K8S_PREFIX }}/{{ item.name }}"
+    tag: "{{ item.version }}"
+    state: absent
+  with_items: "{{ KUBERNETS_IMAGES_NODE }}"
+  when: kube_role == "node"
+  tags:
+    - master
+    - node

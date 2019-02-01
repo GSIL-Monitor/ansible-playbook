@@ -12,3 +12,4 @@ BIN_DOCKER_MACHINE:
   dest: "{{ DIR_USER_LOCAL_BIN }}/docker-machine"
   mode: 0755
 
+DOCKER_VERSION: "latest"
