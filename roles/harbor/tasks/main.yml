@@ -5,5 +5,3 @@
     src: {{ HARBOR_DOWNLOAD_URL }}
     dest: "/usr/local/src"
     remote_src: yes
-
-- name: 
